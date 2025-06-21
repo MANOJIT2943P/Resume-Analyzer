@@ -1,7 +1,7 @@
 import streamlit as st
 from langchain_community.document_loaders import PyPDFLoader
 import tempfile, os
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_together import ChatTogether
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from dotenv import load_dotenv
@@ -9,7 +9,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 #Initialize model and parser and prompts
-model=ChatGoogleGenerativeAI(model='gemini-1.5-pro')
+model=ChatTogether(
+    model='meta-llama/Llama-3-70b-chat-hf',
+)
+
 parser=StrOutputParser()
 
 prompt1=PromptTemplate(
@@ -54,7 +57,10 @@ st.title("Resume Analyzer")
 
 #Taking Input
 resume=st.file_uploader("Upload Your Resume")
-jobDescription=st.text_input("Enter Your Job Description")
+jobDescription=st.text_area(
+    label="Enter Your Job Description",
+    height=500
+)
 
 if st.button("Analyze"):
     st.write(Analysis(resume,jobDescription))
