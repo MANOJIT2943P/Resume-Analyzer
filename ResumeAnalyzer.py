@@ -13,7 +13,7 @@ model=ChatTogether(
     model='meta-llama/Llama-3-70b-chat-hf',
 )
 
-parser=StrOutputParser()
+parser1=StrOutputParser()
 
 prompt1=PromptTemplate(
     template="Extract the following section from the given resume: skills, experience, Education \n {text}",
@@ -21,8 +21,8 @@ prompt1=PromptTemplate(
 )
 
 prompt2=PromptTemplate(
-    template="You are a career coach. Based on the given job description and resume, analyze skill gaps and suggest improvements in resume. Then return the imporved resume. \n Job description: {JD} \n Resume: {text}",
-    input_variables=['JD','text']
+    template="You are a career coach. Based on the given job description and resume, analyze skill gaps and suggest improvements in resume. Then return the imporved resume.\n Job description: {JD} \n Resume: {text}",
+    input_variables=['JD','text'],
 )
 
 #Function for Analyze
@@ -41,17 +41,17 @@ def Analysis(resume,jobDescription):
         os.remove(tmp_file_path)
 
     #First call to extract skills,exp...
-    chain1= prompt1 | model | parser
-    result=chain1.invoke({'text':docs[0].page_content})
+    chain1= prompt1 | model | parser1
+    extracted=chain1.invoke({'text':docs[0].page_content})
 
     #Second call to get improvements
-    chain2=prompt2 | model | parser 
-    result=chain2.invoke({
+    chain2=prompt2 | model | parser1 
+    analysis=chain2.invoke({
         'JD':jobDescription,
         'text':docs[0].page_content
     })
 
-    return result
+    return extracted,analysis
 
 st.title("Resume Analyzer")
 
@@ -63,4 +63,14 @@ jobDescription=st.text_area(
 )
 
 if st.button("Analyze"):
-    st.write(Analysis(resume,jobDescription))
+    extracted,analysis=Analysis(resume,jobDescription)
+
+    tab1,tab2=st.tabs(['Extracted','Analysis'])
+
+    with tab1:
+        st.subheader('Your Resume Content')
+        st.write(extracted)
+    
+    with tab2:
+        st.subheader('Analysis and Suggestion')
+        st.write(analysis)
