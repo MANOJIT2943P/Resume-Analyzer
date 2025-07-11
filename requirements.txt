@@ -1,0 +1,6 @@
+streamlit
+langchain>=0.2.0
+langchain-community
+langchain-together
+python-dotenv
+pypdf
