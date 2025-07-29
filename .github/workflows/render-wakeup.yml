@@ -10,4 +10,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Ping Render service
-        run: curl -s https://your-app-name.onrender.com > /dev/null
+        run: curl -s https://resume-analyzer-hzrm.onrender.com > /dev/null
