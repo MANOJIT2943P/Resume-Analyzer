@@ -1,0 +1,13 @@
+name: Keep Render Awake
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'  # Runs every 15 minutes (UTC time)
+  workflow_dispatch:
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render service
+        run: curl -s https://your-app-name.onrender.com > /dev/null
